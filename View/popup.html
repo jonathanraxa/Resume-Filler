@@ -2,14 +2,14 @@
 <html>
   <head>
     <title>Resume Filler</title>
-    <link rel="stylesheet" type="text/css" href="css/shared-styles.css" />
-    <link rel="stylesheet"type="text/css"  href="css/popup.css" />
+    <link rel="stylesheet" type="text/css" href="../css/shared-styles.css" />
+    <link rel="stylesheet"type="text/css"  href="../css/popup.css" />
     <link
       rel="stylesheet"
       type="text/css"
-      href="dependencies/fontawesome/css/all.min.css"
+      href="../dependencies/fontawesome/css/all.min.css"
     />
-    <link rel="stylesheet" type="text/css" href="dependencies/bulma.min.css" />
+    <link rel="stylesheet" type="text/css" href="../dependencies/bulma.min.css" />
     
   </head>
   <body class="has-text-white">
@@ -19,14 +19,14 @@
     <div class="rf-container">
       <div class="rf-top">
         <h1 class="has-text-grey-light">Resume Filler</h1>
-        <a id="rf-settings-button" href="settings.html" class="has-text-info has-text-weight-semibold">
+        <a id="rf-settings-button" href="./settings.html" class="has-text-info has-text-weight-semibold">
           <span class=''><i class="fas fa-cog"></i></span> Settings
         </a>
       </div>
       <div class='field'>
         <label class="label has-text-white">First Name</label>
         <div class='rf-copy-text-wrap'>
-        <input class="input" type='text' id='rf-firstName' placeholder="First Name" readonly></input>
+        <input class="input" type='text' id='rf-firstName' placeholder="First Name"></input>
         <a class='rf-copy-button has-text-success'><span class="icon">
           <i class="fas fa-clipboard"></i>
         </span> <span class='rf-copy-button-text'>Copy</span></a>
@@ -35,7 +35,7 @@
       <div class='field'>
         <label class="label has-text-white">Last Name</label>
         <div class='rf-copy-text-wrap'>
-        <input class="input" type='text' id='rf-lastName' placeholder="Last Name" readonly></input>
+        <input class="input" type='text' id='rf-lastName' placeholder="Last Name"></input>
         <a class='rf-copy-button has-text-success'><span class="icon">
           <i class="fas fa-clipboard"></i>
         </span> <span class='rf-copy-button-text'>Copy</span></a>
@@ -44,7 +44,7 @@
       <div class='field'>
         <label class="label has-text-white">Short Introduction</label>
         <div class='rf-copy-text-wrap'>
-        <textarea class="textarea" id='rf-shortIntro' placeholder="Short Introduction" readonly></textarea>
+        <textarea class="textarea" id='rf-shortIntro' placeholder="Short Introduction"></textarea>
         <a class='rf-copy-button has-text-success'><span class="icon">
           <i class="fas fa-clipboard"></i>
         </span> <span class='rf-copy-button-text'>Copy</span></a>
@@ -173,7 +173,8 @@
           </div>
       </div>
     </div>
-    <script src="js/popup.js"></script>
+    <script src="../js/popup.js"></script>
+    
   </body>
 </html>
 

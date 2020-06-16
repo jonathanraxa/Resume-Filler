@@ -1,225 +1,230 @@
-document.addEventListener('DOMContentLoaded', function() {
-  var loadingScreen = document.querySelector('#rf-loading')
+document.addEventListener("DOMContentLoaded", function () {
+  let loadingScreen = document.querySelector("#rf-loading");
+  let firstName = document.querySelector("#rf-firstName");
+  let lastName = document.querySelector("#rf-lastName");
+  let shortIntro = document.querySelector("#rf-shortIntro");
 
-  var firstName = document.querySelector('#rf-firstName')
-  var lastName = document.querySelector('#rf-lastName')
-  var shortIntro = document.querySelector('#rf-shortIntro')
-
-  var resume = {}
+  let resume = {};
 
   // Get settings from chrome storage api
-  chrome.storage.sync.get(['rfResumeSettings'], function(result) {
-    resume = result.rfResumeSettings
-    loadingScreen.style.display = 'none'
-    updateValues()
-  })
+  chrome.storage.sync.get(["rfResumeSettings"], function (result) {
+    resume = result.rfResumeSettings;
+    loadingScreen.style.display = "none";
+    updateValues();
+  });
 
   // Update Displayed Values
   function updateValues() {
-    firstName.value = resume.firstName || 'Not Set'
-    lastName.value = resume.lastName || 'Not Set'
-    shortIntro.value = resume.shortIntro || 'Not Set'
-    setupAccordions()
+    firstName.value != ""
+      ? (firstName.value = resume.firstName)
+      : (firstName.value = "Not Set");
+    lastName.value != ""
+      ? (lastName.value = resume.lastName)
+      : (lastName.value = "Not Set");
+    shortIntro.value != ""
+      ? (shortIntro.value = resume.shortIntro)
+      : (shortIntro.value = "Not Set");
+    setupAccordions();
   }
 
   // Copy Text Field
   function copy(el) {
-    var text = el.currentTarget.previousElementSibling
-    text.select()
-    document.execCommand('copy')
-    var copiedIcon = el.currentTarget.children[0].children[0]
-    copiedIcon.classList.remove('fa-clipboard')
-    copiedIcon.classList.add('fa-check')
-    setTimeout(function() {
-      copiedIcon.classList.remove('fa-check')
-      copiedIcon.classList.add('fa-clipboard')
-    }, 1000)
+    var text = el.currentTarget.previousElementSibling;
+    text.select();
+    document.execCommand("copy");
+    var copiedIcon = el.currentTarget.children[0].children[0];
+    copiedIcon.classList.remove("fa-clipboard");
+    copiedIcon.classList.add("fa-check");
+    setTimeout(function () {
+      copiedIcon.classList.remove("fa-check");
+      copiedIcon.classList.add("fa-clipboard");
+    }, 1000);
   }
 
   function initCopyButtons() {
-    var copyButtons = document.querySelectorAll('.rf-copy-button')
-    copyButtons.forEach(function(b) {
-      b.addEventListener('click', copy)
-    })
+    var copyButtons = document.querySelectorAll(".rf-copy-button");
+    copyButtons.forEach(function (b) {
+      b.addEventListener("click", copy);
+    });
   }
-  initCopyButtons()
+  initCopyButtons();
 
   // accordion stuff:
   // an accordion without jQuery?? What!?
 
   class DynamicAccordion {
     constructor(name, container, elToCopy, data) {
-      this.name = name
-      this.container = container
-      this.elToCopy = elToCopy
-      this.data = data
-      this.lastID = 0
+      this.name = name;
+      this.container = container;
+      this.elToCopy = elToCopy;
+      this.data = data;
+      this.lastID = 0;
 
       // Binding the context
-      this.initAccordion = this.initAccordion.bind(this)
+      this.initAccordion = this.initAccordion.bind(this);
 
-      this.setup = this.setup.bind(this)
-      this.setup()
+      this.setup = this.setup.bind(this);
+      this.setup();
     }
 
     getNewID() {
-      this.lastID += 1
+      this.lastID += 1;
       if (
         this.container.querySelector(
           '.accordion[data-accordion-id="' + this.lastID + '"]'
         )
       ) {
-        this.getNewID()
+        this.getNewID();
       } else {
-        return this.lastID
+        return this.lastID;
       }
     }
 
     initAccordion(id, entry) {
-      var context = this
+      var context = this;
       var accordion = this.container.querySelector(
         '.accordion[data-accordion-id="' + id + '"]'
-      )
+      );
       if (entry) {
-        entry.accordionID = id
+        entry.accordionID = id;
       } else {
-        this.data.push({ accordionID: id })
+        this.data.push({ accordionID: id });
       }
 
-      var toggle = accordion.children[0]
-      var content = accordion.children[1]
-      content.querySelector('input.accordion-id-field').value = id
+      var toggle = accordion.children[0];
+      var content = accordion.children[1];
+      content.querySelector("input.accordion-id-field").value = id;
 
-      toggle.addEventListener('click', function(e) {
-        toggle.classList.add('active')
+      toggle.addEventListener("click", function (e) {
+        toggle.classList.add("active");
         if (content.style.maxHeight) {
-          content.style.maxHeight = null
+          content.style.maxHeight = null;
         } else {
-          content.style.maxHeight = content.scrollHeight + 'px'
+          content.style.maxHeight = content.scrollHeight + "px";
         }
-      })
+      });
 
-      initCopyButtons()
+      initCopyButtons();
     }
 
     addAccordion(entry) {
-      var id = this.getNewID()
-      var clone = this.elToCopy.cloneNode(true)
-      clone.classList.remove('accordion-first')
-      clone.dataset.accordionId = id
+      var id = this.getNewID();
+      var clone = this.elToCopy.cloneNode(true);
+      clone.classList.remove("accordion-first");
+      clone.dataset.accordionId = id;
       var containerBot = this.container.querySelector(
-        '.accordion-container-bottom'
-      )
-      this.container.insertBefore(clone, containerBot)
+        ".accordion-container-bottom"
+      );
+      this.container.insertBefore(clone, containerBot);
 
-      clone.children[0].children[0].innerHTML = 'Click to toggle'
+      clone.children[0].children[0].innerHTML = "Click to toggle";
       clone.children[1]
-        .querySelectorAll('input, textarea')
-        .forEach(function(input) {
-          if (input.name != 'accordionID') {
-            input.value = ''
+        .querySelectorAll("input, textarea")
+        .forEach(function (input) {
+          if (input.name != "accordionID") {
+            input.value = "";
           }
-        })
-      clone.children[1].style.maxHeight = clone.children[1].scrollHeight + 'px'
+        });
+      clone.children[1].style.maxHeight = clone.children[1].scrollHeight + "px";
       if (entry) {
-        clone.children[1].style.maxHeight = null
-        this.initAccordion(id, entry)
+        clone.children[1].style.maxHeight = null;
+        this.initAccordion(id, entry);
       } else {
-        this.initAccordion(id)
+        this.initAccordion(id);
       }
 
-      return id
+      return id;
     }
 
     addDataToAccordion(id, data) {
       var accordion = this.container.querySelector(
         '.accordion[data-accordion-id="' + id + '"]'
-      )
+      );
       // first child is toggle row then get p tag inside that
       if (data.title) {
-        accordion.children[0].children[0].innerHTML = data.title
+        accordion.children[0].children[0].innerHTML = data.title;
       }
       // second child is content
       accordion.children[1]
-        .querySelectorAll('input, textarea')
-        .forEach(input => {
-          if (input.name == 'accordionID') {
-            return
+        .querySelectorAll("input, textarea")
+        .forEach((input) => {
+          if (input.name == "accordionID") {
+            return;
           }
           if (data[input.name]) {
-            input.value = data[input.name]
+            input.value = data[input.name];
           } else {
-            input.value = ''
+            input.value = "";
           }
-        })
+        });
     }
     setup() {
-      var context = this
-      var data = this.data
+      var context = this;
+      var data = this.data;
       if (data.length > 0) {
-        data.forEach(function(entry, index) {
+        data.forEach(function (entry, index) {
           if (index === 0) {
-            context.initAccordion(0, entry)
-            context.addDataToAccordion(0, entry)
+            context.initAccordion(0, entry);
+            context.addDataToAccordion(0, entry);
           } else {
-            var newID = context.addAccordion(entry)
-            context.addDataToAccordion(newID, entry)
+            var newID = context.addAccordion(entry);
+            context.addDataToAccordion(newID, entry);
           }
-        })
+        });
       } else {
-        context.initAccordion(0)
+        context.initAccordion(0);
       }
     }
   }
 
   function setupAccordions() {
-    console.log(resume)
+    console.log(resume);
     // SETUP EXPERIENCE ACCORDION
-    var expContainer = document.querySelector('.experience-container')
-    var firstExp = expContainer.querySelector('.accordion-first')
+    var expContainer = document.querySelector(".experience-container");
+    var firstExp = expContainer.querySelector(".accordion-first");
     if (resume.experience) {
       if (
         resume.experience.length === 1 &&
         Object.keys(resume.experience[0]).length < 2
       ) {
-        expContainer.innerHTML = '<p>No Data, add experience in settings!</p>'
+        expContainer.innerHTML = "<p>No Data, add experience in settings!</p>";
       } else {
         // name, container, elToCopy,data
         var experienceAccordion = new DynamicAccordion(
-          'experience',
+          "experience",
           expContainer,
           firstExp,
           resume.experience ? resume.experience : []
-        )
+        );
       }
     } else {
-      expContainer.innerHTML = '<p>No Data, add experience in settings!</p>'
+      expContainer.innerHTML = "<p>No Data, add experience in settings!</p>";
     }
 
     // SETUP EDUCATION ACCORDION
-    var eduContainer = document.querySelector('.education-container')
-    var firstEdu = eduContainer.querySelector('.accordion-first')
+    var eduContainer = document.querySelector(".education-container");
+    var firstEdu = eduContainer.querySelector(".accordion-first");
     if (resume.education) {
-      console.log(Object.keys(resume.education[0]).length)
+      console.log(Object.keys(resume.education[0]).length);
       if (
         resume.education.length === 1 &&
         Object.keys(resume.education[0]).length < 2
       ) {
-        eduContainer.innerHTML = '<p>No Data, add education in settings!</p>'
+        eduContainer.innerHTML = "<p>No Data, add education in settings!</p>";
       } else {
         // name, container, elToCopy, data
         var educationAccordion = new DynamicAccordion(
-          'education',
+          "education",
           eduContainer,
           firstEdu,
           resume.education ? resume.education : []
-        )
+        );
       }
     } else {
-      console.log('here2')
-      eduContainer.innerHTML = '<p>No Data, add education in settings!</p>'
+      console.log("here2");
+      eduContainer.innerHTML = "<p>No Data, add education in settings!</p>";
     }
   }
 
   // End of on content loaded
-})
+});
